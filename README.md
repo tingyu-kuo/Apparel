@@ -16,6 +16,3 @@
 
 ### 選擇繼續或是退出:
 <img src="https://github.com/tingyu-kuo/Apparel/blob/main/images/finish.PNG" width="500"/><br/>
-
-### 輸出的結果會以Excel儲存:
-<img src="https://github.com/tingyu-kuo/Apparel/blob/main/images/finish2.PNG" width="300"/><br/>
