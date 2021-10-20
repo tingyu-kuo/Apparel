@@ -23,14 +23,13 @@ class Predict():
         self.get_classes()
 
     def get_path(self):
-        # self.base_path = Path('./', 'lib', 'models')
         self.type_model_path = str('0225-resnext101-type.pth')        # acc = 96%
         self.product_model_path = str('0225-resnext101-product.pth')    # acc = 95.5%
         self.color_model_path = str('0223-resnext101-color.pth')       # acc = 95%
 
     def get_device(self):
         self.use_cuda = torch.cuda.is_available()
-        self.device = torch.device('cuda:0' if self.use_cuda else 'cpu')
+        self.device = torch.device('cuda' if self.use_cuda else 'cpu')
 
     def load_model(self):
         model = torch.hub.load('pytorch/vision:v0.6.0', 'resnext101_32x8d', pretrained=False)
@@ -58,13 +57,12 @@ class Predict():
 
     def load_data(self):
         self.dataset = PredictDataset(self.path)
-        self.dataloader = DataLoader(dataset=self.dataset, batch_size=2, num_workers=4)
+        self.dataloader = DataLoader(dataset=self.dataset, num_workers=4, batch_size=2)
 
     def get_classes(self):
         self.type_classes = ['2', '1']      # 平織1，針織2
         self.product_classes = ['JK', 'SK', 'SH', 'DS', 'PT', 'TP']
         self.color_classes = ['WH', 'OG', 'PK', 'GY', 'BK', 'PU', 'BU', 'GN', 'UN', 'BN', 'YE', 'RD']
-if __name__ == '__main__':
-    Predict(in_path='C:\\Tingyu\\Study\\MVL\\clothes\\AI Import\\20201204\\Image_20201204\\19S001')
+
 
 
