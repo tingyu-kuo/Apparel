@@ -13,32 +13,33 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        # main window
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(600, 400)
         MainWindow.setStyleSheet("#MainWindow{border-image:url(background.jpg);}")
-        # MainWindow.setStyleSheet("#MainWindow{border-image:url(./background2.jpeg);}")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
+        # words font 1
+        self.font_1 = QtGui.QFont()
+        self.font_1.setFamily("微軟正黑體")
+        # words font 2
+        self.font_2 = QtGui.QFont()
+        self.font_2.setFamily("標楷體")
 
-        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton.setGeometry(QtCore.QRect(430, 80, 90, 30))
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(12)
-        self.pushButton.setFont(font)
-        self.pushButton.setObjectName("pushButton")
-        self.pushButton.setStyleSheet(
-            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
-            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);font-size:18px;}")
+        # Line edit 1 (input path)
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
         self.lineEdit.setGeometry(QtCore.QRect(100, 80, 320, 30))
-        font = QtGui.QFont()
-        font.setFamily("微軟正黑體")
-        # font.setPointSize(10)
-        self.lineEdit.setFont(font)
-        self.lineEdit.setObjectName("lineEdit")
-        self.lineEdit.setStyleSheet("#lineEdit{border:2px groove gray;border-radius:10px;padding:2px 4px;font-size:16px;}")
+        self.lineEdit.setFont(self.font_1)
+        self.lineEdit.setStyleSheet("QLineEdit{border:2px groove gray;border-radius:10px;padding:2px 4px;font-size:14px;}")
         self.lineEdit.setEnabled(False)
+
+        # Line edit 2 (output path)
+        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineEdit_2.setGeometry(QtCore.QRect(100, 180, 320, 30))
+        self.lineEdit_2.setFont(self.font_1)
+        self.lineEdit_2.setStyleSheet("QLineEdit{border:2px groove gray;border-radius:10px;padding:2px 4px;font-size:14px;}")
+        self.lineEdit_2.setEnabled(False)
+
+        # Label 1 (input notation)
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(100, 40, 180, 30))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
@@ -46,95 +47,83 @@ class Ui_MainWindow(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
         self.label.setSizePolicy(sizePolicy)
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(12)
-        self.label.setFont(font)
+        self.label.setFont(self.font_2)
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label.setStyleSheet("QLabel{font-size:18px;}")
-        self.label.setObjectName("label")
+        self.label.setText(">> 輸入的資料夾:")
+
+        # Label 2 (output notation)
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(100, 140, 180, 30))
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(12)
-        self.label_2.setFont(font)
+        self.label_2.setFont(self.font_2)
         self.label_2.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label_2.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignVCenter)
         self.label_2.setStyleSheet("QLabel{font-size:18px;}")
-        self.label_2.setObjectName("label_2")
+        self.label_2.setText(">> 輸出的資料夾:")
+
+        # Button 1 (input browse)
+        self.pushButton = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton.setGeometry(QtCore.QRect(430, 80, 90, 30))
+        self.pushButton.setFont(self.font_2)
+        self.pushButton.setText("瀏覽")
+        self.pushButton.setStyleSheet(
+            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
+            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);font-size:18px;}"
+        )
+
+        # Button 2 (output browse)
         self.pushButton_2 = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_2.setGeometry(QtCore.QRect(430, 180, 90, 30))
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(12)
-        self.pushButton_2.setFont(font)
-        self.pushButton_2.setObjectName("pushButton_2")
+        self.pushButton_2.setFont(self.font_2)
+        self.pushButton_2.setText("瀏覽")
         self.pushButton_2.setStyleSheet(
             "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
-            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);;font-size:18px;}")
-        self.lineEdit_2 = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit_2.setGeometry(QtCore.QRect(100, 180, 320, 30))
-        font = QtGui.QFont()
-        font.setFamily("微軟正黑體")
-        # font.setPointSize(10)
-        self.lineEdit_2.setFont(font)
-        self.lineEdit_2.setObjectName("lineEdit_2")
-        self.lineEdit_2.setStyleSheet("#lineEdit_2{border:2px groove gray;border-radius:10px;padding:2px 4px;font-size:16px;}")
-        self.lineEdit_2.setEnabled(False)
+            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);;font-size:18px;}"
+        )
+
+        # Button 3 (start)
+        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_3.setGeometry(QtCore.QRect(220, 270, 160, 50))
+        self.pushButton_3.setFont(self.font_2)
+        self.pushButton_3.setText("開始判讀")
+        self.pushButton_3.setStyleSheet(
+            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px; background-color:#F8F8FF;font-size:22px;}"
+            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);font-size:24px;}"
+        )
+
+        # Button 4 (restart)
+        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_4.setGeometry(QtCore.QRect(170, 280, 90, 40))
+        self.pushButton_4.setFont(self.font_2)
+        self.pushButton_4.setText("繼續判讀")
+        self.pushButton_4.setStyleSheet(
+            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
+            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);font-size:18px;}"
+        )
+
+        # Button 5 (close)
+        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushButton_5.setGeometry(QtCore.QRect(340, 280, 90, 40))
+        self.pushButton_5.setFont(self.font_2)
+        self.pushButton_5.setText("結束判讀")
+        self.pushButton_5.setStyleSheet(
+            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
+            "QPushButton:hover{background-color:rgb(255, 240, 245);border-color:rgb(238, 44, 44);font-size:18px;}"
+        )
+
+        # Progress bar
         self.progressBar = QtWidgets.QProgressBar(self.centralwidget)
         self.progressBar.setGeometry(QtCore.QRect(50, 360, 500, 25))
         self.progressBar.setProperty("value", 0)
-        self.progressBar.setObjectName("progressBar")
+        self.progressBar.setFont(self.font_1)
         self.progressBar.setStyleSheet(
-            "QProgressBar{border: 2px solid gray; border-radius: 5px; background-color: #FFFFFF}"
-            "QProgressBar::chunk{background-color: #87CEFA; width: 10px}"
-            "QProgressBar{border: 2px solid gray; border-radius: 5px; text-align: center;}")
-        self.pushButton_3 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_3.setGeometry(QtCore.QRect(220, 270, 160, 50))
+            "QProgressBar{border: 2px solid gray; border-radius: 5px; background-color: #FFFFFF; font-size:14px;}"
+            "QProgressBar::chunk{background-color: #87CEFA; width: 10px; font-size:14px;}"
+            "QProgressBar{border: 2px solid gray; border-radius: 5px; text-align: center; font-size:14px;}"
+        )
 
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(16)
-        self.pushButton_3.setFont(font)
-        self.pushButton_3.setObjectName("pushButton_3")
-        self.pushButton_3.setStyleSheet(
-            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px; background-color:#F8F8FF;font-size:22px;}"
-            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);font-size:24px;}")
-        self.pushButton_4 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_4.setGeometry(QtCore.QRect(180, 280, 80, 40))
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(12)
-        self.pushButton_4.setFont(font)
-        self.pushButton_4.setObjectName("pushButton_4")
-        self.pushButton_4.setStyleSheet(
-            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
-            "QPushButton:hover{background-color:rgb(240, 248, 255);border-color:rgb(100, 149, 237);font-size:18px;}")
-        self.pushButton_5 = QtWidgets.QPushButton(self.centralwidget)
-        self.pushButton_5.setGeometry(QtCore.QRect(340, 280, 80, 40))
-        font = QtGui.QFont()
-        font.setFamily("標楷體")
-        # font.setPointSize(12)
-        self.pushButton_5.setFont(font)
-        self.pushButton_5.setObjectName("pushButton_5")
-        self.pushButton_5.setStyleSheet(
-            "QPushButton{border:2px groove gray;border-radius:10px;padding:2px 4px;background-color:#F8F8FF;font-size:18px;}"
-            "QPushButton:hover{background-color:rgb(255, 240, 245);border-color:rgb(238, 44, 44);font-size:18px;}")
         MainWindow.setCentralWidget(self.centralwidget)
+        # QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        self.retranslateUi(MainWindow)
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-    def retranslateUi(self, MainWindow):
-        _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.pushButton.setText(_translate("MainWindow", "瀏覽"))
-        self.label.setText(_translate("MainWindow", ">> 輸入的資料夾:"))
-        self.label_2.setText(_translate("MainWindow", ">> 輸出的資料夾:"))
-        self.pushButton_2.setText(_translate("MainWindow", "瀏覽"))
-        self.pushButton_3.setText(_translate("MainWindow", "開始判讀"))
-        self.pushButton_4.setText(_translate("MainWindow", "繼續判讀"))
-        self.pushButton_5.setText(_translate("MainWindow", "關閉程式"))
 
