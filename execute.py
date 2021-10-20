@@ -8,7 +8,6 @@ import pandas as pd
 import predict
 import numpy as np
 import torch
-import threading
 
 
 class Runthread(QtCore.QThread):
@@ -19,16 +18,6 @@ class Runthread(QtCore.QThread):
         self.in_path = in_path
         self.out_path = out_path
 
-    # def type_cal(self, inputs):
-    #     type_outputs = self.preds.type_model(inputs)
-    #     self.type_preds = torch.argmax(type_outputs, dim=1)
-    # def product_cal(self, inputs):
-    #     product_outputs = self.preds.product_model(inputs)
-    #     self.product_preds = torch.argmax(product_outputs, dim=1)
-    # def color_cal(self, inputs):
-    #     color_outputs = self.preds.color_model(inputs)
-    #     self.color_preds = torch.argmax(color_outputs, dim=1)
-
     def run(self):
         # 執行判讀及結果處理
         self.preds = predict.Predict(in_path=self.in_path, out_path=self.out_path)
@@ -36,28 +25,18 @@ class Runthread(QtCore.QThread):
         self.record = pd.DataFrame(init, columns=['file','type','product','color'])
         index = 0
         for i, (inputs, file_n) in enumerate(self.preds.dataloader):
-            p = int(((i+1) / len(self.preds.dataset))*100) # 進度百分比
+            p = int(((i+1)*2 / len(self.preds.dataset))*100) # 進度百分比
+            p = 100 if p>=100 else p
             inputs = inputs.cuda(self.preds.device) if self.preds.use_cuda else inputs
-            with torch.no_grad():
-                # type predict
-                type_outputs = self.preds.type_model(inputs)
-                self.type_preds = torch.argmax(type_outputs, dim=1)
-                # product predict
-                product_outputs = self.preds.product_model(inputs)
-                self.product_preds = torch.argmax(product_outputs, dim=1)
-                # color predict
-                color_outputs = self.preds.color_model(inputs)
-                self.color_preds = torch.argmax(color_outputs, dim=1)
-
-            # thread_type = threading.Thread(target=self.type_cal(inputs))
-            # thread_product = threading.Thread(target=self.product_cal(inputs))
-            # thread_color = threading.Thread(target=self.color_cal(inputs))
-            # thread_type.start()
-            # thread_product.start()
-            # thread_color.start()
-            # thread_type.join()
-            # thread_product.join()
-            # thread_color.join()
+            # type predict
+            type_outputs = self.preds.type_model(inputs)
+            self.type_preds = torch.argmax(type_outputs, dim=1)
+            # product predict
+            product_outputs = self.preds.product_model(inputs)
+            self.product_preds = torch.argmax(product_outputs, dim=1)
+            # color predict
+            color_outputs = self.preds.color_model(inputs)
+            self.color_preds = torch.argmax(color_outputs, dim=1)
 
             for i in range(len(inputs)):
                 self.record.loc[index+i, 'file'] = file_n[i]
@@ -70,12 +49,13 @@ class Runthread(QtCore.QThread):
         self.record.to_csv(str(save_path), index=False)
 
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.input_filename = str()
         self.output_filename = str()
+        # path of Desktop
+        self.desk = os.path.join(os.path.expanduser("~"), 'Desktop')
 
         self.ui_main = Ui_MainWindow()
         self.ui_main.setupUi(self)
@@ -90,24 +70,22 @@ class MainWindow(QMainWindow):
         # button control
         self.ui_main.pushButton_4.hide()
         self.ui_main.pushButton_5.hide()
-        # 初始畫面按鍵功能
+        # initial button fn
         self.ui_main.pushButton.clicked.connect(self.input_browse)
         self.ui_main.pushButton_2.clicked.connect(self.output_browse)
         self.ui_main.pushButton_3.clicked.connect(self.isStartClick)
-        # 判讀完畢按鍵功能
+        # button of restart or close
         self.ui_main.pushButton_4.clicked.connect(self.isRestartClick)
         self.ui_main.pushButton_5.clicked.connect(sys.exit)
         self.ui_main.progressBar.hide()
 
     # brower to choose input and output folder
     def input_browse(self):
-        desk = os.path.join(os.path.expanduser("~"), 'Desktop')
-        self.input_filename = QtWidgets.QFileDialog.getExistingDirectory(self, '選擇資料夾', desk)
+        self.input_filename = QtWidgets.QFileDialog.getExistingDirectory(self, '選擇資料夾', self.desk)
         self.ui_main.lineEdit.setText(self.input_filename)
 
     def output_browse(self):
-        desk = os.path.join(os.path.expanduser("~"), 'Desktop')
-        self.output_filename = QtWidgets.QFileDialog.getExistingDirectory(self, '選擇資料夾', desk)
+        self.output_filename = QtWidgets.QFileDialog.getExistingDirectory(self, '選擇資料夾', self.desk)
         self.ui_main.lineEdit_2.setText(self.output_filename)
 
     # restart when the continue button is clicked
@@ -142,13 +120,13 @@ class MainWindow(QMainWindow):
 
     # start_login & call_backlog控制執行緒回傳
     def start_classify(self):
-        self.thread = Runthread(self.input_filename, self.output_filename)
-        self.thread._signal.connect(self.call_backlog)  # 執行緒連接回UI的動作
-        self.thread.start()
+            self.thread = Runthread(self.input_filename, self.output_filename)
+            self.thread._signal.connect(self.call_backlog)  # 執行緒連接回UI的動作
+            self.thread.start()
 
     def call_backlog(self, msg):
         self.ui_main.progressBar.setValue(int(msg))
-        if int(msg) == 100:
+        if int(msg) >= 100:
             self.finish()
             self.thread.quit()
 
@@ -177,8 +155,7 @@ class MainWindow(QMainWindow):
             try:
                 time.sleep(0.1)
                 self.start_classify()
-            except Exception as e:
-                print(e)
+            except:
                 QMessageBox.question(self,'錯誤','輸入的資料有誤，請確認資料正確性。\t', QMessageBox.Retry, QMessageBox.Retry)
                 self.show()
                 self.isRestartClick()
