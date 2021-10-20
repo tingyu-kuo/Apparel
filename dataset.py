@@ -36,4 +36,3 @@ class PredictDataset(Dataset):
         image = Image.open(self.x[index]).convert('RGB')
         image = self.transform(image)
         return image, self.n[index]
-
